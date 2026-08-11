@@ -1,18 +1,15 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import Input from '../../components/Input.jsx'
 import Button from '../../components/Button.jsx'
 import { validateLogin } from '../../utils/validators.js'
-import { login } from '../../services/authService.js'
+import { login as loginRequest } from '../../services/authService.js'
+import { useAuth } from '../../context/AuthContext.jsx'
 
-/**
- * Shared login form logic for all three roles. Each role page (AdminLogin,
- * ManagerLogin, EmployeeLogin) just supplies `role` and `accent` — this is
- * where validation, submit, loading, and error-state actually live, so
- * fixing a bug here fixes it for all three portals at once.
- */
 export default function LoginForm({ role, accent, dashboardPath }) {
   const navigate = useNavigate()
+  const location = useLocation()
+  const { login } = useAuth()
   const [form, setForm] = useState({ email: '', password: '', remember: false })
   const [errors, setErrors] = useState({})
   const [submitError, setSubmitError] = useState('')
@@ -21,7 +18,6 @@ export default function LoginForm({ role, accent, dashboardPath }) {
   function handleChange(e) {
     const { name, value, type, checked } = e.target
     setForm((f) => ({ ...f, [name]: type === 'checkbox' ? checked : value }))
-    // Clear a field's error the moment the user starts fixing it.
     if (errors[name]) setErrors((er) => ({ ...er, [name]: undefined }))
   }
 
@@ -34,11 +30,10 @@ export default function LoginForm({ role, accent, dashboardPath }) {
 
     setLoading(true)
     try {
-      const { token, user } = await login({ ...form, role })
-      const storage = form.remember ? localStorage : sessionStorage
-      storage.setItem('smarthr_token', token)
-      storage.setItem('smarthr_user', JSON.stringify(user))
-      navigate(dashboardPath, { replace: true })
+      const { token, user } = await loginRequest({ ...form, role })
+      login(token, user, form.remember)
+      const redirectTo = location.state?.from?.pathname || dashboardPath
+      navigate(redirectTo, { replace: true })
     } catch (err) {
       setSubmitError(err.message || 'Unable to sign in. Please try again.')
     } finally {

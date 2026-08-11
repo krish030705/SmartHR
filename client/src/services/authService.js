@@ -1,32 +1,20 @@
-/**
- * Auth service.
- *
- * Phase 1 status: mocked so the three login pages have real loading/error/
- * success behavior to build and test against. Phase 4 replaces the body of
- * `login()` with an axios POST to /api/auth/login (JWT + role check) — the
- * function signature and return shape below are designed to stay the same,
- * so no page-level code should need to change when that happens.
- */
+import apiClient from './apiClient.js'
 
-const MOCK_LATENCY_MS = 700
-
-/**
- * @param {{ email: string, password: string, role: 'admin'|'manager'|'employee' }} credentials
- * @returns {Promise<{ token: string, user: { email: string, role: string } }>}
- */
+// Real implementation — return shape matches the Phase 1 mock, so
+// LoginForm.jsx needed zero changes.
 export async function login({ email, password, role }) {
-  await new Promise((resolve) => setTimeout(resolve, MOCK_LATENCY_MS))
+  const { data } = await apiClient.post('/auth/login', { email, password, role })
+  return data
+}
 
-  // Simple placeholder rule so the "wrong password" error path is testable
-  // right now, before the real backend exists.
-  if (password.length < 6) {
-    const error = new Error('Invalid email or password.')
-    error.code = 'INVALID_CREDENTIALS'
-    throw error
-  }
+export async function fetchCurrentUser() {
+  const { data } = await apiClient.get('/auth/me')
+  return data.user
+}
 
-  return {
-    token: 'mock-jwt-token',
-    user: { email, role },
-  }
+export function logout() {
+  localStorage.removeItem('smarthr_token')
+  localStorage.removeItem('smarthr_user')
+  sessionStorage.removeItem('smarthr_token')
+  sessionStorage.removeItem('smarthr_user')
 }
