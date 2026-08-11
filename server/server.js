@@ -3,6 +3,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import { connectDB } from './config/db.js'
 import authRoutes from './routes/authRoutes.js'
+import dashboardRoutes from './routes/dashboardRoutes.js'
 
 dotenv.config()
 
@@ -15,6 +16,7 @@ app.get('/api/health', (_req, res) => {
 })
 
 app.use('/api/auth', authRoutes)
+app.use('/api/dashboard', dashboardRoutes)
 
 // Route modules are added here one module at a time.
 
