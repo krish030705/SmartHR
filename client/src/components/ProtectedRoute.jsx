@@ -34,5 +34,9 @@ export default function ProtectedRoute({ allowedRoles, children }) {
     return <Navigate to={`/${user.role}/dashboard`} replace />
   }
 
-  return children
-}
+  // A forced password change blocks every other protected page.
+  if (user.mustChangePassword && location.pathname !== '/set-password') {
+    return <Navigate to="/set-password" replace />
+  }
+
+return children }

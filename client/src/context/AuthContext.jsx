@@ -44,8 +44,20 @@ export function AuthProvider({ children }) {
     setUser(null)
   }, [])
 
+  // Patches fields on the current user both in state and in whichever
+  // storage holds the session.
+  const updateUser = useCallback((patch) => {
+    setUser((u) => {
+      if (!u) return u
+      const next = { ...u, ...patch }
+      const storage = localStorage.getItem('smarthr_user') ? localStorage : sessionStorage
+      storage.setItem('smarthr_user', JSON.stringify(next))
+      return next
+    })
+  }, [])
+
   return (
-    <AuthContext.Provider value={{ user, initializing, login, logout }}>
+    <AuthContext.Provider value={{ user, initializing, login, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   )

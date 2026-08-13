@@ -18,3 +18,7 @@ export function logout() {
   sessionStorage.removeItem('smarthr_token')
   sessionStorage.removeItem('smarthr_user')
 }
+export async function changePassword(newPassword) {
+  const { data } = await apiClient.put('/auth/change-password', { newPassword })
+  return data
+}

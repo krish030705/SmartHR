@@ -36,6 +36,13 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    // True for accounts created with a system-generated temp password
+    // (see employeeController.createEmployee) — forces a "set new
+    // password" step before they can reach any dashboard.
+    mustChangePassword: {
+      type: Boolean,
+      default: false,
+    }, 
   },
   { timestamps: true },
 )

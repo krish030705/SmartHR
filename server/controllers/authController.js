@@ -7,11 +7,10 @@ function publicUser(user) {
     name: user.name,
     email: user.email,
     role: user.role,
+    mustChangePassword: user.mustChangePassword,
   }
 }
 
-// POST /api/auth/login — role is checked against the account's actual
-// role so an Employee account can't sign in through the Admin portal.
 export async function login(req, res) {
   const { email, password, role } = req.body
 
@@ -38,12 +37,10 @@ export async function login(req, res) {
   res.json({ token, user: publicUser(user) })
 }
 
-// GET /api/auth/me — confirms a stored token is still valid
 export async function me(req, res) {
   res.json({ user: publicUser(req.user) })
 }
 
-// POST /api/auth/register — not exposed in the UI; used for seeding accounts
 export async function register(req, res) {
   const { name, email, password, role } = req.body
 
@@ -59,4 +56,26 @@ export async function register(req, res) {
   const user = await User.create({ name, email, password, role })
   const token = signToken(user)
   res.status(201).json({ token, user: publicUser(user) })
+}
+
+/**
+ * PUT /api/auth/change-password
+ * Body: { newPassword }
+ * Used for the forced first-login flow — the user already proved they
+ * know the temp password by logging in moments ago, so this doesn't
+ * re-ask for it.
+ */
+export async function changePassword(req, res) {
+  const { newPassword } = req.body
+
+  if (!newPassword || newPassword.length < 6) {
+    return res.status(400).json({ message: 'New password must be at least 6 characters.' })
+  }
+
+  const user = await User.findById(req.user._id)
+  user.password = newPassword
+  user.mustChangePassword = false
+  await user.save()
+
+  res.json({ message: 'Password updated successfully.' })
 }
