@@ -14,8 +14,8 @@ const ROLE_ACCENT = {
 // "Soon" badge rather than omitted or linked to a dead page.
 const ADMIN_NAV = [
   { label: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard, enabled: true },
-  { label: 'Employees', path: '/admin/employees', icon: Users, enabled: true },,
-  { label: 'Departments', icon: Building2, enabled: false },
+  { label: 'Employees', path: '/admin/employees', icon: Users, enabled: true },
+  { label: 'Departments', path: '/admin/departments', icon: Building2, enabled: true },
   { label: 'Attendance', icon: CalendarCheck, enabled: false },
   { label: 'Leave', icon: CalendarClock, enabled: false },
   { label: 'Payroll', icon: Wallet, enabled: false },
