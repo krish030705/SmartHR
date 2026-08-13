@@ -9,6 +9,7 @@ import EmployeesList from '../pages/admin/employees/EmployeesList.jsx'
 import PlaceholderDashboard from '../pages/PlaceholderDashboard.jsx'
 import ProtectedRoute from '../components/ProtectedRoute.jsx'
 import SetNewPassword from '../pages/auth/SetNewPassword.jsx'
+import EmployeeProfile from '../pages/admin/employees/EmployeeProfile.jsx'
 export default function AppRoutes() {
   return (
     <Routes>
@@ -21,6 +22,7 @@ export default function AppRoutes() {
 
       <Route path="/admin/dashboard" element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboard /></ProtectedRoute>} />
       <Route path="/admin/employees" element={<ProtectedRoute allowedRoles={['admin']}><EmployeesList /></ProtectedRoute>} />
+      <Route path="/admin/employees/:id" element={<ProtectedRoute allowedRoles={['admin']}><EmployeeProfile /></ProtectedRoute>} />
       <Route path="/manager/dashboard" element={<ProtectedRoute allowedRoles={['manager']}><PlaceholderDashboard role="manager" /></ProtectedRoute>} />
       <Route path="/employee/dashboard" element={<ProtectedRoute allowedRoles={['employee']}><PlaceholderDashboard role="employee" /></ProtectedRoute>} />
 

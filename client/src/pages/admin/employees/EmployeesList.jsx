@@ -6,7 +6,7 @@ import Pagination from '../../../components/Pagination.jsx'
 import Select from '../../../components/Select.jsx'
 import ConfirmDialog from '../../../components/ConfirmDialog.jsx'
 import EmployeeFormModal from './EmployeeFormModal.jsx'
-import EmployeeViewModal from './EmployeeViewModal.jsx'
+import { useNavigate } from 'react-router-dom'
 import { listEmployees, deleteEmployee as deleteEmployeeRequest } from '../../../services/employeeService.js'
 import { listDepartments } from '../../../services/departmentService.js'
 
@@ -31,10 +31,9 @@ export default function EmployeesList() {
 
   const [formOpen, setFormOpen] = useState(false)
   const [editingEmployee, setEditingEmployee] = useState(null)
-  const [viewingEmployee, setViewingEmployee] = useState(null)
   const [deletingEmployee, setDeletingEmployee] = useState(null)
   const [deleting, setDeleting] = useState(false)
-
+  const navigate = useNavigate()
   const loadEmployees = useCallback(async () => {
     setLoading(true)
     setError('')
@@ -124,7 +123,7 @@ export default function EmployeesList() {
       label: '',
       render: (row) => (
         <div className="flex gap-1">
-          <button onClick={() => setViewingEmployee(row)} className="rounded-lg p-1.5 text-slate-soft hover:bg-black/5 hover:text-ink" title="View">
+        <button onClick={() => navigate(`/admin/employees/${row._id}`)} className="rounded-lg p-1.5 text-slate-soft hover:bg-black/5 hover:text-ink" title="View">
             <Eye size={16} />
           </button>
           <button onClick={() => openEditForm(row)} className="rounded-lg p-1.5 text-slate-soft hover:bg-black/5 hover:text-ink" title="Edit">
@@ -191,7 +190,6 @@ export default function EmployeesList() {
       <Pagination page={pagination.page} totalPages={pagination.totalPages} total={pagination.total} onPageChange={setPage} />
 
       <EmployeeFormModal open={formOpen} onClose={() => setFormOpen(false)} employee={editingEmployee} departments={departments} onSaved={handleSaved} />
-      <EmployeeViewModal open={Boolean(viewingEmployee)} onClose={() => setViewingEmployee(null)} employee={viewingEmployee} />
       <ConfirmDialog
         open={Boolean(deletingEmployee)}
         onClose={() => setDeletingEmployee(null)}
