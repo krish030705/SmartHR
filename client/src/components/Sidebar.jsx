@@ -16,7 +16,7 @@ const ADMIN_NAV = [
   { label: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard, enabled: true },
   { label: 'Employees', path: '/admin/employees', icon: Users, enabled: true },
   { label: 'Departments', path: '/admin/departments', icon: Building2, enabled: true },
-  { label: 'Attendance', icon: CalendarCheck, enabled: false },
+ { label: 'Attendance', path: '/admin/attendance', icon: CalendarCheck, enabled: true },,
   { label: 'Leave', icon: CalendarClock, enabled: false },
   { label: 'Payroll', icon: Wallet, enabled: false },
   { label: 'Holidays', icon: PartyPopper, enabled: false },
