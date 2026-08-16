@@ -23,8 +23,16 @@ const ADMIN_NAV = [
   { label: 'Notifications', icon: Bell, enabled: false },
   { label: 'Settings', icon: Settings, enabled: false },
 ]
+const EMPLOYEE_NAV = [
+  { label: 'Dashboard', path: '/employee/dashboard', icon: LayoutDashboard, enabled: true },
+  { label: 'My Attendance', icon: CalendarCheck, enabled: false },
+  { label: 'My Leave', icon: CalendarClock, enabled: false },
+  { label: 'My Salary', icon: Wallet, enabled: false },
+  { label: 'Holidays', icon: PartyPopper, enabled: false },
+  { label: 'Settings', icon: Settings, enabled: false },
+]
 
-const NAV_BY_ROLE = { admin: ADMIN_NAV }
+const NAV_BY_ROLE = { admin: ADMIN_NAV, employee: EMPLOYEE_NAV }
 
 export default function Sidebar({ role }) {
   const items = NAV_BY_ROLE[role] || ADMIN_NAV
