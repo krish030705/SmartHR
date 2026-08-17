@@ -102,13 +102,15 @@ export async function createEmployee(req, res) {
   }
 
   const tempPassword = generateTempPassword()
-  const user = await User.create({
-     name: req.body.name,
-    email: req.body.email,
-    password: tempPassword,
-    role: 'employee',
-    mustChangePassword: true,
-  })
+const role = req.body.role === 'manager' ? 'manager' : 'employee'
+
+const user = await User.create({
+  name: req.body.name,
+  email: req.body.email,
+  password: tempPassword,
+  role,
+  mustChangePassword: true,
+})
 
   try {
     const employee = await Employee.create({

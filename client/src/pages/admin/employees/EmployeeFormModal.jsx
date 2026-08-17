@@ -8,9 +8,8 @@ import { createEmployee, updateEmployee } from '../../../services/employeeServic
 
 const EMPTY_FORM = {
   name: '', email: '', phone: '', gender: '', dateOfBirth: '', address: '',
-  department: '', position: '', joiningDate: '', employmentStatus: 'Active', salary: '',
+  department: '', position: '', joiningDate: '', employmentStatus: 'Active', salary: '', role: 'employee',
 }
-
 export default function EmployeeFormModal({ open, onClose, employee, departments, onSaved }) {
   const isEdit = Boolean(employee)
   const [form, setForm] = useState(EMPTY_FORM)
@@ -98,6 +97,10 @@ export default function EmployeeFormModal({ open, onClose, employee, departments
           <Input id="name" name="name" label="Full name" value={form.name} onChange={handleChange} error={errors.name} />
           <Input id="email" name="email" type="email" label="Email" value={form.email} onChange={handleChange} error={errors.email} disabled={isEdit} />
           <Input id="phone" name="phone" label="Phone" value={form.phone} onChange={handleChange} error={errors.phone} />
+          <Select
+  id="role" name="role" label="Role" value={form.role} onChange={handleChange}
+  options={[{ value: 'employee', label: 'Employee' }, { value: 'manager', label: 'Manager' }]}
+/>
           <Select
             id="gender" name="gender" label="Gender" value={form.gender} onChange={handleChange}
             placeholder="Select gender"

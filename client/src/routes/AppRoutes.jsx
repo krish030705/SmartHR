@@ -13,6 +13,7 @@ import EmployeeProfile from '../pages/admin/employees/EmployeeProfile.jsx'
 import DepartmentsList from '../pages/admin/departments/DepartmentsList.jsx'
 import AttendanceList from '../pages/admin/AttendanceList.jsx'
 import EmployeeDashboard from '../pages/employee/EmployeeDashboard.jsx'
+import ManagerDashboard from '../pages/manager/ManagerDashboard.jsx'
 export default function AppRoutes() {
   return (
     <Routes>
@@ -28,7 +29,7 @@ export default function AppRoutes() {
       <Route path="/admin/employees/:id" element={<ProtectedRoute allowedRoles={['admin']}><EmployeeProfile /></ProtectedRoute>} />
       <Route path="/admin/departments" element={<ProtectedRoute allowedRoles={['admin']}><DepartmentsList /></ProtectedRoute>} />
       <Route path="/admin/attendance" element={<ProtectedRoute allowedRoles={['admin']}><AttendanceList /></ProtectedRoute>} />
-      <Route path="/manager/dashboard" element={<ProtectedRoute allowedRoles={['manager']}><PlaceholderDashboard role="manager" /></ProtectedRoute>} />
+     <Route path="/manager/dashboard" element={<ProtectedRoute allowedRoles={['manager']}><ManagerDashboard /></ProtectedRoute>} />
       <Route path="/employee/dashboard" element={<ProtectedRoute allowedRoles={['employee']}><EmployeeDashboard /></ProtectedRoute>} />
     </Routes>
   )

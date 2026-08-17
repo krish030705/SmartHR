@@ -31,8 +31,15 @@ const EMPLOYEE_NAV = [
   { label: 'Holidays', icon: PartyPopper, enabled: false },
   { label: 'Settings', icon: Settings, enabled: false },
 ]
+const MANAGER_NAV = [
+  { label: 'Dashboard', path: '/manager/dashboard', icon: LayoutDashboard, enabled: true },
+  { label: 'My Team', icon: Users, enabled: false },
+  { label: 'Attendance', icon: CalendarCheck, enabled: false },
+  { label: 'Leave', icon: CalendarClock, enabled: false },
+  { label: 'Settings', icon: Settings, enabled: false },
+]
 
-const NAV_BY_ROLE = { admin: ADMIN_NAV, employee: EMPLOYEE_NAV }
+const NAV_BY_ROLE = { admin: ADMIN_NAV, employee: EMPLOYEE_NAV, manager: MANAGER_NAV }
 
 export default function Sidebar({ role }) {
   const items = NAV_BY_ROLE[role] || ADMIN_NAV
