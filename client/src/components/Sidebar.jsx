@@ -18,7 +18,7 @@ const ADMIN_NAV = [
   { label: 'Departments', path: '/admin/departments', icon: Building2, enabled: true },
   { label: 'Attendance', path: '/admin/attendance', icon: CalendarCheck, enabled: true },
   { label: 'Leave', path: '/admin/leave', icon: CalendarClock, enabled: true },
-  { label: 'Payroll', icon: Wallet, enabled: false },
+{ label: 'Payroll', path: '/admin/payroll', icon: Wallet, enabled: true },
   { label: 'Holidays', icon: PartyPopper, enabled: false },
   { label: 'Notifications', icon: Bell, enabled: false },
   { label: 'Settings', icon: Settings, enabled: false },
@@ -27,7 +27,7 @@ const EMPLOYEE_NAV = [
   { label: 'Dashboard', path: '/employee/dashboard', icon: LayoutDashboard, enabled: true },
   { label: 'My Attendance', icon: CalendarCheck, enabled: false },
   { label: 'My Leave', path: '/employee/leave', icon: CalendarClock, enabled: true },,
-  { label: 'My Salary', icon: Wallet, enabled: false },
+ { label: 'My Salary', path: '/employee/salary', icon: Wallet, enabled: true },
   { label: 'Holidays', icon: PartyPopper, enabled: false },
   { label: 'Settings', icon: Settings, enabled: false },
 ]

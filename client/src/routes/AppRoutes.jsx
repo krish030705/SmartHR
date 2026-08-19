@@ -16,6 +16,8 @@ import EmployeeDashboard from '../pages/employee/EmployeeDashboard.jsx'
 import ManagerDashboard from '../pages/manager/ManagerDashboard.jsx'
 import AdminLeaveList from '../pages/admin/AdminLeaveList.jsx'
 import MyLeave from '../pages/employee/MyLeave.jsx'
+import AdminPayrollList from '../pages/admin/AdminPayrollList.jsx'
+import MySalary from '../pages/employee/MySalary.jsx'
 export default function AppRoutes() {
   return (
     <Routes>
@@ -35,6 +37,8 @@ export default function AppRoutes() {
       <Route path="/employee/dashboard" element={<ProtectedRoute allowedRoles={['employee']}><EmployeeDashboard /></ProtectedRoute>} />
       <Route path="/admin/leave" element={<ProtectedRoute allowedRoles={['admin']}><AdminLeaveList /></ProtectedRoute>} />
 <Route path="/employee/leave" element={<ProtectedRoute allowedRoles={['employee']}><MyLeave /></ProtectedRoute>} />
+<Route path="/admin/payroll" element={<ProtectedRoute allowedRoles={['admin']}><AdminPayrollList /></ProtectedRoute>} />
+<Route path="/employee/salary" element={<ProtectedRoute allowedRoles={['employee']}><MySalary /></ProtectedRoute>} />
     </Routes>
   )
 }
