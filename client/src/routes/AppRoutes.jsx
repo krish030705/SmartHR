@@ -18,6 +18,8 @@ import AdminLeaveList from '../pages/admin/AdminLeaveList.jsx'
 import MyLeave from '../pages/employee/MyLeave.jsx'
 import AdminPayrollList from '../pages/admin/AdminPayrollList.jsx'
 import MySalary from '../pages/employee/MySalary.jsx'
+import AdminHolidaysList from '../pages/admin/AdminHolidaysList.jsx'
+import EmployeeHolidays from '../pages/employee/EmployeeHolidays.jsx'
 export default function AppRoutes() {
   return (
     <Routes>
@@ -39,6 +41,8 @@ export default function AppRoutes() {
 <Route path="/employee/leave" element={<ProtectedRoute allowedRoles={['employee']}><MyLeave /></ProtectedRoute>} />
 <Route path="/admin/payroll" element={<ProtectedRoute allowedRoles={['admin']}><AdminPayrollList /></ProtectedRoute>} />
 <Route path="/employee/salary" element={<ProtectedRoute allowedRoles={['employee']}><MySalary /></ProtectedRoute>} />
+<Route path="/admin/holidays" element={<ProtectedRoute allowedRoles={['admin']}><AdminHolidaysList /></ProtectedRoute>} />
+<Route path="/employee/holidays" element={<ProtectedRoute allowedRoles={['employee']}><EmployeeHolidays /></ProtectedRoute>} />
     </Routes>
   )
 }

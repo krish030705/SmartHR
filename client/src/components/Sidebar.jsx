@@ -19,7 +19,7 @@ const ADMIN_NAV = [
   { label: 'Attendance', path: '/admin/attendance', icon: CalendarCheck, enabled: true },
   { label: 'Leave', path: '/admin/leave', icon: CalendarClock, enabled: true },
 { label: 'Payroll', path: '/admin/payroll', icon: Wallet, enabled: true },
-  { label: 'Holidays', icon: PartyPopper, enabled: false },
+ { label: 'Holidays', path: '/admin/holidays', icon: PartyPopper, enabled: true },
   { label: 'Notifications', icon: Bell, enabled: false },
   { label: 'Settings', icon: Settings, enabled: false },
 ]
@@ -28,7 +28,7 @@ const EMPLOYEE_NAV = [
   { label: 'My Attendance', icon: CalendarCheck, enabled: false },
   { label: 'My Leave', path: '/employee/leave', icon: CalendarClock, enabled: true },,
  { label: 'My Salary', path: '/employee/salary', icon: Wallet, enabled: true },
-  { label: 'Holidays', icon: PartyPopper, enabled: false },
+  { label: 'Holidays', path: '/employee/holidays', icon: PartyPopper, enabled: true },
   { label: 'Settings', icon: Settings, enabled: false },
 ]
 const MANAGER_NAV = [
