@@ -1,5 +1,6 @@
 import Leave from '../models/Leave.js'
 import Employee from '../models/Employee.js'
+import Notification from '../models/Notification.js'
 
 function daysBetween(start, end) {
   const MS_PER_DAY = 1000 * 60 * 60 * 24
@@ -26,14 +27,28 @@ export async function applyLeave(req, res) {
     return res.status(404).json({ message: 'No employee profile linked to this account.' })
   }
 
+  const days = daysBetween(startDate, endDate)
+
   const leave = await Leave.create({
     employee: employee._id,
     leaveType,
     startDate,
     endDate,
-    days: daysBetween(startDate, endDate),
+    days,
     reason,
   })
+
+  // Notify the employee's manager, if they have one assigned.
+  if (employee.manager) {
+    const manager = await Employee.findById(employee.manager)
+    if (manager) {
+      await Notification.create({
+        user: manager.user,
+        message: `${employee.name} applied for ${leaveType} (${days} day${days === 1 ? '' : 's'}).`,
+        type: 'leave',
+      })
+    }
+  }
 
   res.status(201).json({ leave })
 }
@@ -125,6 +140,16 @@ export async function approveLeave(req, res) {
   leave.status = 'Approved'
   leave.reviewedBy = req.user._id
   await leave.save()
+
+  const notifyEmployee = await Employee.findById(leave.employee)
+  if (notifyEmployee) {
+    await Notification.create({
+      user: notifyEmployee.user,
+      message: `Your ${leave.leaveType} request (${leave.days} day${leave.days === 1 ? '' : 's'}) was approved.`,
+      type: 'leave',
+    })
+  }
+
   res.json({ leave })
 }
 
@@ -146,5 +171,15 @@ export async function rejectLeave(req, res) {
   leave.status = 'Rejected'
   leave.reviewedBy = req.user._id
   await leave.save()
+
+  const notifyEmployee = await Employee.findById(leave.employee)
+  if (notifyEmployee) {
+    await Notification.create({
+      user: notifyEmployee.user,
+      message: `Your ${leave.leaveType} request (${leave.days} day${leave.days === 1 ? '' : 's'}) was rejected.`,
+      type: 'leave',
+    })
+  }
+
   res.json({ leave })
 }
