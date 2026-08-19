@@ -3,6 +3,22 @@ import Department from '../models/Department.js'
 import User from '../models/User.js'
 import { generateTempPassword } from '../utils/generatePassword.js'
 
+
+/**
+ * GET /api/employees/managers
+ * Lightweight list of active managers, for the "reports to" dropdown.
+ */
+export async function listManagers(_req, res) {
+  const managerUsers = await User.find({ role: 'manager', isActive: true }).select('_id')
+  const managerUserIds = managerUsers.map((u) => u._id)
+
+  const managers = await Employee.find({ user: { $in: managerUserIds } })
+    .select('name employeeId')
+    .sort({ name: 1 })
+
+  res.json({ managers })
+}
+
 async function nextEmployeeId() {
   const count = await Employee.countDocuments()
   return `EMP-${String(count + 1).padStart(4, '0')}`

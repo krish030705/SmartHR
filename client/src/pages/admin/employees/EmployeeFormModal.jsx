@@ -4,12 +4,13 @@ import Input from '../../../components/Input.jsx'
 import Select from '../../../components/Select.jsx'
 import Button from '../../../components/Button.jsx'
 import { validateEmployee } from '../../../utils/validators.js'
-import { createEmployee, updateEmployee } from '../../../services/employeeService.js'
+import { createEmployee, updateEmployee, fetchManagers } from '../../../services/employeeService.js'
 
 const EMPTY_FORM = {
   name: '', email: '', phone: '', gender: '', dateOfBirth: '', address: '',
-  department: '', position: '', joiningDate: '', employmentStatus: 'Active', salary: '', role: 'employee',
+  department: '', position: '', joiningDate: '', employmentStatus: 'Active', salary: '', role: 'employee', manager: '',
 }
+
 export default function EmployeeFormModal({ open, onClose, employee, departments, onSaved }) {
   const isEdit = Boolean(employee)
   const [form, setForm] = useState(EMPTY_FORM)
@@ -17,6 +18,7 @@ export default function EmployeeFormModal({ open, onClose, employee, departments
   const [submitError, setSubmitError] = useState('')
   const [tempPassword, setTempPassword] = useState('')
   const [saving, setSaving] = useState(false)
+  const [managers, setManagers] = useState([])
 
   useEffect(() => {
     if (!open) return
@@ -36,11 +38,18 @@ export default function EmployeeFormModal({ open, onClose, employee, departments
         joiningDate: employee.joiningDate ? employee.joiningDate.slice(0, 10) : '',
         employmentStatus: employee.employmentStatus || 'Active',
         salary: employee.salary ?? '',
+        role: employee.user?.role || 'employee',
+        manager: employee.manager?._id || '',
       })
     } else {
       setForm(EMPTY_FORM)
     }
   }, [open, employee])
+
+  useEffect(() => {
+    if (!open) return
+    fetchManagers().then(setManagers).catch(() => setManagers([]))
+  }, [open])
 
   function handleChange(e) {
     const { name, value } = e.target
@@ -98,9 +107,15 @@ export default function EmployeeFormModal({ open, onClose, employee, departments
           <Input id="email" name="email" type="email" label="Email" value={form.email} onChange={handleChange} error={errors.email} disabled={isEdit} />
           <Input id="phone" name="phone" label="Phone" value={form.phone} onChange={handleChange} error={errors.phone} />
           <Select
-  id="role" name="role" label="Role" value={form.role} onChange={handleChange}
-  options={[{ value: 'employee', label: 'Employee' }, { value: 'manager', label: 'Manager' }]}
-/>
+            id="role" name="role" label="Role" value={form.role} onChange={handleChange}
+            options={[{ value: 'employee', label: 'Employee' }, { value: 'manager', label: 'Manager' }]}
+            disabled={isEdit}
+          />
+          <Select
+            id="manager" name="manager" label="Reports to" value={form.manager} onChange={handleChange}
+            placeholder="No manager"
+            options={managers.map((m) => ({ value: m._id, label: `${m.name} (${m.employeeId})` }))}
+          />
           <Select
             id="gender" name="gender" label="Gender" value={form.gender} onChange={handleChange}
             placeholder="Select gender"

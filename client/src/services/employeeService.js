@@ -24,3 +24,8 @@ export async function deleteEmployee(id) {
   const { data } = await apiClient.delete(`/employees/${id}`)
   return data
 }
+
+export async function fetchManagers() {
+  const { data } = await apiClient.get('/employees/managers')
+  return data.managers
+}
