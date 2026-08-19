@@ -9,6 +9,7 @@ import departmentRoutes from './routes/departmentRoutes.js'
 import attendanceRoutes from './routes/attendanceRoutes.js'
 import leaveRoutes from './routes/leaveRoutes.js'
 import payrollRoutes from './routes/payrollRoutes.js'
+import holidayRoutes from './routes/holidayRoutes.js'
 dotenv.config()
 
 const app = express()
@@ -26,6 +27,7 @@ app.use('/api/departments', departmentRoutes)
 app.use('/api/attendance', attendanceRoutes)
 app.use('/api/leave', leaveRoutes)
 app.use('/api/payroll', payrollRoutes)
+app.use('/api/holidays', holidayRoutes)
 
 // Route modules are added here one module at a time.
 
