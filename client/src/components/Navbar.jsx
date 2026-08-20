@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { LogOut } from 'lucide-react'
 import { useAuth } from '../context/AuthContext.jsx'
+import NotificationBell from './NotificationBell.jsx'
 
 export default function Navbar({ title }) {
   const { user, logout } = useAuth()
@@ -23,6 +24,7 @@ export default function Navbar({ title }) {
       <h1 className="font-display text-lg font-medium text-ink">{title}</h1>
 
       <div className="flex items-center gap-4">
+        <NotificationBell />
         <div className="flex items-center gap-2.5">
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-50 text-sm font-medium text-brand-700">
             {initials}
@@ -42,4 +44,4 @@ export default function Navbar({ title }) {
       </div>
     </header>
   )
-} 
+}
