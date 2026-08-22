@@ -21,6 +21,7 @@ import MySalary from '../pages/employee/MySalary.jsx'
 import AdminHolidaysList from '../pages/admin/AdminHolidaysList.jsx'
 import EmployeeHolidays from '../pages/employee/EmployeeHolidays.jsx'
 import SettingsPage from '../pages/SettingsPage.jsx'
+import MyTeam from '../pages/manager/MyTeam.jsx'
 export default function AppRoutes() {
   return (
     <Routes>
@@ -47,6 +48,7 @@ export default function AppRoutes() {
 <Route path="/admin/settings" element={<ProtectedRoute allowedRoles={['admin']}><SettingsPage role="admin" /></ProtectedRoute>} />
 <Route path="/manager/settings" element={<ProtectedRoute allowedRoles={['manager']}><SettingsPage role="manager" /></ProtectedRoute>} />
 <Route path="/employee/settings" element={<ProtectedRoute allowedRoles={['employee']}><SettingsPage role="employee" /></ProtectedRoute>} />
+<Route path="/manager/team" element={<ProtectedRoute allowedRoles={['manager']}><MyTeam /></ProtectedRoute>} />
     </Routes>
   )
 }

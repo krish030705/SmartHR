@@ -33,7 +33,7 @@ const EMPLOYEE_NAV = [
 ]
 const MANAGER_NAV = [
   { label: 'Dashboard', path: '/manager/dashboard', icon: LayoutDashboard, enabled: true },
-  { label: 'My Team', icon: Users, enabled: false },
+ { label: 'My Team', path: '/manager/team', icon: Users, enabled: true },
   { label: 'Attendance', icon: CalendarCheck, enabled: false },
   { label: 'Leave', icon: CalendarClock, enabled: false },
   { label: 'Settings', path: '/manager/settings', icon: Settings, enabled: true },

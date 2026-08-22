@@ -18,6 +18,23 @@ export async function listManagers(_req, res) {
 
   res.json({ managers })
 }
+/**
+ * GET /api/team
+ * Manager-only: list of employees who report to the logged-in manager.
+ */
+export async function myTeam(req, res) {
+  const manager = await Employee.findOne({ user: req.user._id })
+  if (!manager) {
+    return res.status(404).json({ message: 'No employee profile linked to this account.' })
+  }
+
+  const team = await Employee.find({ manager: manager._id })
+    .populate('department', 'name')
+    .select('name employeeId email phone position department employmentStatus')
+    .sort({ name: 1 })
+
+  res.json({ team })
+}
 
 async function nextEmployeeId() {
   const count = await Employee.countDocuments()
