@@ -60,19 +60,31 @@ export async function register(req, res) {
 
 /**
  * PUT /api/auth/change-password
- * Body: { newPassword }
- * Used for the forced first-login flow — the user already proved they
- * know the temp password by logging in moments ago, so this doesn't
- * re-ask for it.
+ * Body: { currentPassword, newPassword }
+ *
+ * currentPassword is required UNLESS the user is on the forced first-login
+ * flow (mustChangePassword: true) — in that case they already proved they
+ * know the temp password by logging in moments ago, so we don't re-ask.
  */
 export async function changePassword(req, res) {
-  const { newPassword } = req.body
+  const { currentPassword, newPassword } = req.body
 
   if (!newPassword || newPassword.length < 6) {
     return res.status(400).json({ message: 'New password must be at least 6 characters.' })
   }
 
-  const user = await User.findById(req.user._id)
+  const user = await User.findById(req.user._id).select('+password')
+
+  if (!user.mustChangePassword) {
+    if (!currentPassword) {
+      return res.status(400).json({ message: 'Current password is required.' })
+    }
+    const matches = await user.comparePassword(currentPassword)
+    if (!matches) {
+      return res.status(401).json({ message: 'Current password is incorrect.' })
+    }
+  }
+
   user.password = newPassword
   user.mustChangePassword = false
   await user.save()

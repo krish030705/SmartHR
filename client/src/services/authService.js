@@ -7,6 +7,11 @@ export async function login({ email, password, role }) {
   return data
 }
 
+export async function changePassword(payload) {
+  const { data } = await apiClient.put('/auth/change-password', payload)
+  return data
+}
+
 export async function fetchCurrentUser() {
   const { data } = await apiClient.get('/auth/me')
   return data.user
@@ -17,8 +22,4 @@ export function logout() {
   localStorage.removeItem('smarthr_user')
   sessionStorage.removeItem('smarthr_token')
   sessionStorage.removeItem('smarthr_user')
-}
-export async function changePassword(newPassword) {
-  const { data } = await apiClient.put('/auth/change-password', { newPassword })
-  return data
 }

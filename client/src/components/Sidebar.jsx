@@ -21,7 +21,7 @@ const ADMIN_NAV = [
 { label: 'Payroll', path: '/admin/payroll', icon: Wallet, enabled: true },
  { label: 'Holidays', path: '/admin/holidays', icon: PartyPopper, enabled: true },
   { label: 'Notifications', icon: Bell, enabled: false },
-  { label: 'Settings', icon: Settings, enabled: false },
+{ label: 'Settings', path: '/admin/settings', icon: Settings, enabled: true },
 ]
 const EMPLOYEE_NAV = [
   { label: 'Dashboard', path: '/employee/dashboard', icon: LayoutDashboard, enabled: true },
@@ -29,14 +29,14 @@ const EMPLOYEE_NAV = [
   { label: 'My Leave', path: '/employee/leave', icon: CalendarClock, enabled: true },,
  { label: 'My Salary', path: '/employee/salary', icon: Wallet, enabled: true },
   { label: 'Holidays', path: '/employee/holidays', icon: PartyPopper, enabled: true },
-  { label: 'Settings', icon: Settings, enabled: false },
+  { label: 'Settings', path: '/employee/settings', icon: Settings, enabled: true },
 ]
 const MANAGER_NAV = [
   { label: 'Dashboard', path: '/manager/dashboard', icon: LayoutDashboard, enabled: true },
   { label: 'My Team', icon: Users, enabled: false },
   { label: 'Attendance', icon: CalendarCheck, enabled: false },
   { label: 'Leave', icon: CalendarClock, enabled: false },
-  { label: 'Settings', icon: Settings, enabled: false },
+  { label: 'Settings', path: '/manager/settings', icon: Settings, enabled: true },
 ]
 
 const NAV_BY_ROLE = { admin: ADMIN_NAV, employee: EMPLOYEE_NAV, manager: MANAGER_NAV }

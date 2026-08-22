@@ -29,7 +29,7 @@ export default function SetNewPassword() {
 
     setLoading(true)
     try {
-      await changePassword(password)
+     await changePassword({ newPassword: password })
       updateUser({ mustChangePassword: false })
       navigate(`/${user.role}/dashboard`, { replace: true })
     } catch (err) {
