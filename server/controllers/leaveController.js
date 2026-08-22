@@ -1,6 +1,7 @@
 import Leave from '../models/Leave.js'
 import Employee from '../models/Employee.js'
 import Notification from '../models/Notification.js'
+import User from '../models/User.js'
 
 function daysBetween(start, end) {
   const MS_PER_DAY = 1000 * 60 * 60 * 24
@@ -38,7 +39,7 @@ export async function applyLeave(req, res) {
     reason,
   })
 
-  // Notify the employee's manager, if they have one assigned.
+   // Notify the employee's manager, if they have one assigned.
   if (employee.manager) {
     const manager = await Employee.findById(employee.manager)
     if (manager) {
@@ -50,8 +51,19 @@ export async function applyLeave(req, res) {
     }
   }
 
-  res.status(201).json({ leave })
-}
+  // Also notify all admins/HR.
+  const admins = await User.find({ role: 'admin', isActive: true }).select('_id')
+  await Promise.all(
+    admins.map((admin) =>
+      Notification.create({
+        user: admin._id,
+        message: `${employee.name} applied for ${leaveType} (${days} day${days === 1 ? '' : 's'}).`,
+        type: 'leave',
+      }),
+    ),
+  )
+
+  res.status(201).json({ leave })}
 
 /**
  * GET /api/leave/me

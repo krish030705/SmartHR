@@ -22,6 +22,9 @@ import AdminHolidaysList from '../pages/admin/AdminHolidaysList.jsx'
 import EmployeeHolidays from '../pages/employee/EmployeeHolidays.jsx'
 import SettingsPage from '../pages/SettingsPage.jsx'
 import MyTeam from '../pages/manager/MyTeam.jsx'
+import ManagerAttendanceList from '../pages/manager/ManagerAttendanceList.jsx'
+import ManagerLeaveList from '../pages/manager/ManagerLeaveList.jsx'
+import EmployeeAttendanceList from '../pages/employee/EmployeeAttendanceList.jsx'
 export default function AppRoutes() {
   return (
     <Routes>
@@ -49,6 +52,9 @@ export default function AppRoutes() {
 <Route path="/manager/settings" element={<ProtectedRoute allowedRoles={['manager']}><SettingsPage role="manager" /></ProtectedRoute>} />
 <Route path="/employee/settings" element={<ProtectedRoute allowedRoles={['employee']}><SettingsPage role="employee" /></ProtectedRoute>} />
 <Route path="/manager/team" element={<ProtectedRoute allowedRoles={['manager']}><MyTeam /></ProtectedRoute>} />
+<Route path="/manager/attendance" element={<ProtectedRoute allowedRoles={['manager']}><ManagerAttendanceList /></ProtectedRoute>} />
+<Route path="/manager/leave" element={<ProtectedRoute allowedRoles={['manager']}><ManagerLeaveList /></ProtectedRoute>} />
+<Route path="/employee/attendance" element={<ProtectedRoute allowedRoles={['employee']}><EmployeeAttendanceList /></ProtectedRoute>} />
     </Routes>
   )
 }
