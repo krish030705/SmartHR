@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import { connectDB } from './config/db.js'
 import User from './models/User.js'
 import Department from './models/Department.js'
+import Employee from './models/Employee.js'
 
 dotenv.config()
 
@@ -36,47 +37,93 @@ const DEFAULT_DEPARTMENTS = [
   'Operations',
 ]
 
+async function upsertUser(demo) {
+  const existing = await User.findOne({ email: demo.email })
+
+  if (existing) {
+    existing.name = demo.name
+    existing.password = demo.password
+    existing.role = demo.role
+    existing.isActive = true
+    await existing.save()
+    console.log(`Updated user: ${demo.email} / ${demo.password} (${demo.role})`)
+    return existing
+  }
+
+  const created = await User.create(demo)
+  console.log(`Created user: ${demo.email} / ${demo.password} (${demo.role})`)
+  return created
+}
+
+async function upsertEmployee({ employeeId, user, department, position, salary, manager = null }) {
+  const existing = await Employee.findOne({ user: user._id })
+
+  const payload = {
+    employeeId,
+    name: user.name,
+    email: user.email,
+    phone: '9999999999',
+    department: department._id,
+    position,
+    joiningDate: new Date('2024-01-01'),
+    employmentStatus: 'Active',
+    salary,
+    manager,
+    user: user._id,
+  }
+
+  if (existing) {
+    Object.assign(existing, payload)
+    await existing.save()
+    console.log(`Updated employee profile for ${user.email}`)
+    return existing
+  }
+
+  const created = await Employee.create(payload)
+  console.log(`Created employee profile for ${user.email}`)
+  return created
+}
+
 async function seed() {
   await connectDB()
 
-  for (const demo of DEMO_USERS) {
-    const existing = await User.findOne({ email: demo.email })
-
-    if (existing) {
-      console.log(`Updating existing user: ${demo.email}`)
-
-      existing.name = demo.name
-      existing.password = demo.password
-      existing.role = demo.role
-      existing.isActive = true
-
-      await existing.save()
-
-      console.log(`Updated: ${demo.email} / ${demo.password} (${demo.role})`)
-    } else {
-      await User.create(demo)
-
-      console.log(
-        `Created: ${demo.email} / ${demo.password} (${demo.role})`
-      )
-    }
-  }
-
+  // Departments first — employees reference them.
+  const departmentDocs = {}
   for (const name of DEFAULT_DEPARTMENTS) {
-    const existing = await Department.findOne({ name })
-
-    if (existing) {
+    let dept = await Department.findOne({ name })
+    if (!dept) {
+      dept = await Department.create({ name })
+      console.log(`Created department: ${name}`)
+    } else {
       console.log(`Skipped (already exists): department ${name}`)
-      continue
     }
-
-    await Department.create({ name })
-
-    console.log(`Created department: ${name}`)
+    departmentDocs[name] = dept
   }
+
+  // Users next.
+  const [adminUser, managerUser, employeeUser] = await Promise.all(
+    DEMO_USERS.map(upsertUser),
+  )
+
+  // Employee profiles for manager and employee — admin doesn't need one.
+  const managerEmployee = await upsertEmployee({
+    employeeId: 'EMP-DEMO-MGR',
+    user: managerUser,
+    department: departmentDocs.IT,
+    position: 'Engineering Manager',
+    salary: 350000,
+  })
+
+  await upsertEmployee({
+    employeeId: 'EMP-DEMO-EMP',
+    user: employeeUser,
+    department: departmentDocs.IT,
+    position: 'Software Engineer',
+    salary: 250000,
+    manager: managerEmployee._id,
+  })
 
   await mongoose.disconnect()
-
   console.log('Seeding complete.')
 }
 
