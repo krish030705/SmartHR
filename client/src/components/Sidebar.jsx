@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom'
+import { X } from 'lucide-react'
 import {
   LayoutDashboard, Users, Building2, CalendarCheck,
   CalendarClock, Wallet, PartyPopper, Bell, Settings,
@@ -18,76 +19,94 @@ const ADMIN_NAV = [
   { label: 'Departments', path: '/admin/departments', icon: Building2, enabled: true },
   { label: 'Attendance', path: '/admin/attendance', icon: CalendarCheck, enabled: true },
   { label: 'Leave', path: '/admin/leave', icon: CalendarClock, enabled: true },
-{ label: 'Payroll', path: '/admin/payroll', icon: Wallet, enabled: true },
- { label: 'Holidays', path: '/admin/holidays', icon: PartyPopper, enabled: true },
-  ,
-{ label: 'Settings', path: '/admin/settings', icon: Settings, enabled: true },
+  { label: 'Payroll', path: '/admin/payroll', icon: Wallet, enabled: true },
+  { label: 'Holidays', path: '/admin/holidays', icon: PartyPopper, enabled: true },
+  { label: 'Settings', path: '/admin/settings', icon: Settings, enabled: true },
 ]
 const EMPLOYEE_NAV = [
   { label: 'Dashboard', path: '/employee/dashboard', icon: LayoutDashboard, enabled: true },
- { label: 'My Attendance', path: '/employee/attendance', icon: CalendarCheck, enabled: true },
-  { label: 'My Leave', path: '/employee/leave', icon: CalendarClock, enabled: true },,
- { label: 'My Salary', path: '/employee/salary', icon: Wallet, enabled: true },
+  { label: 'My Attendance', path: '/employee/attendance', icon: CalendarCheck, enabled: true },
+  { label: 'My Leave', path: '/employee/leave', icon: CalendarClock, enabled: true },
+  { label: 'My Salary', path: '/employee/salary', icon: Wallet, enabled: true },
   { label: 'Holidays', path: '/employee/holidays', icon: PartyPopper, enabled: true },
   { label: 'Settings', path: '/employee/settings', icon: Settings, enabled: true },
 ]
 const MANAGER_NAV = [
   { label: 'Dashboard', path: '/manager/dashboard', icon: LayoutDashboard, enabled: true },
- { label: 'My Team', path: '/manager/team', icon: Users, enabled: true },
- { label: 'Attendance', path: '/manager/attendance', icon: CalendarCheck, enabled: true },
- { label: 'Leave', path: '/manager/leave', icon: CalendarClock, enabled: true },
+  { label: 'My Team', path: '/manager/team', icon: Users, enabled: true },
+  { label: 'Attendance', path: '/manager/attendance', icon: CalendarCheck, enabled: true },
+  { label: 'Leave', path: '/manager/leave', icon: CalendarClock, enabled: true },
   { label: 'Settings', path: '/manager/settings', icon: Settings, enabled: true },
 ]
 
 const NAV_BY_ROLE = { admin: ADMIN_NAV, employee: EMPLOYEE_NAV, manager: MANAGER_NAV }
 
-export default function Sidebar({ role }) {
+export default function Sidebar({ role, mobileOpen, onClose }) {
   const items = NAV_BY_ROLE[role] || ADMIN_NAV
   const accent = ROLE_ACCENT[role] ?? ROLE_ACCENT.admin
 
   return (
-    <aside className="hidden w-60 shrink-0 flex-col border-r border-black/5 bg-white px-4 py-6 lg:flex">
-      <div className="flex items-center gap-2 px-2">
-        <span className="font-display text-xl font-medium text-ink">SmartHR</span>
-      </div>
+    <>
+      {/* Backdrop — only rendered on mobile while the drawer is open */}
+      {mobileOpen && (
+        <div
+          onClick={onClose}
+          className="fixed inset-0 z-30 bg-black/30 lg:hidden"
+          aria-hidden="true"
+        />
+      )}
 
-      <nav className="mt-8 flex flex-1 flex-col gap-1">
-        {items.map((item) => {
-          const Icon = item.icon
-          if (!item.enabled) {
+      <aside
+        className={`fixed inset-y-0 left-0 z-40 flex w-60 shrink-0 flex-col border-r border-black/5 bg-white px-4 py-6 transition-transform duration-200 lg:static lg:z-auto lg:translate-x-0 ${
+          mobileOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        <div className="flex items-center justify-between px-2">
+          <span className="font-display text-xl font-medium text-ink">SmartHR</span>
+          <button onClick={onClose} className="text-ink lg:hidden" aria-label="Close menu">
+            <X size={20} />
+          </button>
+        </div>
+
+        <nav className="mt-8 flex flex-1 flex-col gap-1">
+          {items.map((item) => {
+            const Icon = item.icon
+            if (!item.enabled) {
+              return (
+                <div
+                  key={item.label}
+                  className="flex cursor-not-allowed items-center justify-between rounded-lg px-3 py-2 text-sm text-slate-soft/70"
+                  title="Coming in a later phase"
+                >
+                  <span className="flex items-center gap-3">
+                    <Icon size={18} />
+                    {item.label}
+                  </span>
+                  <span className="rounded-full bg-black/5 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide">
+                    Soon
+                  </span>
+                </div>
+              )
+            }
             return (
-              <div
+              <NavLink
                 key={item.label}
-                className="flex cursor-not-allowed items-center justify-between rounded-lg px-3 py-2 text-sm text-slate-soft/70"
-                title="Coming in a later phase"
+                to={item.path}
+                onClick={onClose}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                    isActive ? 'text-paper' : 'text-ink hover:bg-black/5'
+                  }`
+                }
+                style={({ isActive }) => (isActive ? { backgroundColor: accent } : undefined)}
               >
-                <span className="flex items-center gap-3">
-                  <Icon size={18} />
-                  {item.label}
-                </span>
-                <span className="rounded-full bg-black/5 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide">
-                  Soon
-                </span>
-              </div>
+                <Icon size={18} />
+                {item.label}
+              </NavLink>
             )
-          }
-          return (
-            <NavLink
-              key={item.label}
-              to={item.path}
-              className={({ isActive }) =>
-                `flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                  isActive ? 'text-paper' : 'text-ink hover:bg-black/5'
-                }`
-              }
-              style={({ isActive }) => (isActive ? { backgroundColor: accent } : undefined)}
-            >
-              <Icon size={18} />
-              {item.label}
-            </NavLink>
-          )
-        })}
-      </nav>
-    </aside>
+          })}
+        </nav>
+      </aside>
+    </>
   )
 }

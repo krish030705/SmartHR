@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom'
-import { LogOut } from 'lucide-react'
+import { LogOut, Menu } from 'lucide-react'
 import { useAuth } from '../context/AuthContext.jsx'
 import NotificationBell from './NotificationBell.jsx'
 
-export default function Navbar({ title }) {
+export default function Navbar({ title, onMenuClick }) {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
 
@@ -20,8 +20,13 @@ export default function Navbar({ title }) {
     .toUpperCase()
 
   return (
-    <header className="flex h-16 items-center justify-between border-b border-black/5 bg-white px-6">
-      <h1 className="font-display text-lg font-medium text-ink">{title}</h1>
+    <header className="flex h-16 items-center justify-between border-b border-black/5 bg-white px-4 sm:px-6">
+      <div className="flex items-center gap-3">
+        <button onClick={onMenuClick} className="text-ink lg:hidden" aria-label="Open menu">
+          <Menu size={22} />
+        </button>
+        <h1 className="font-display text-lg font-medium text-ink">{title}</h1>
+      </div>
 
       <div className="flex items-center gap-4">
         <NotificationBell />
