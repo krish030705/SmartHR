@@ -1,91 +1,140 @@
-# SmartHR — Human Resource Management System
+# SmartHR – Human Resource Management System
 
-A full-stack HR Management System with role-based portals for Admin/HR, Managers, and Employees. Built as a portfolio project (MERN stack).
+A full-stack HR management platform with role-based access for Admin/HR, Managers, and Employees — built as a portfolio project to demonstrate a complete MERN application with real authentication, authorization, and multi-role workflows.
 
-> **Status:** Phase 1 in progress — project scaffolding, shared UI components, and the three role-based login pages are done. Authentication, dashboards, and the rest of the modules are being built module by module (see Roadmap below).
+## Features
 
-## Features (planned, full scope)
+**Admin / HR**
+- Dashboard with live employee/manager/department/pending-leave stats
+- Employee management — search, filter, sort, paginate, add/edit/remove, auto-generated login accounts
+- Employee profiles with tabbed detail view
+- Department management with employee-count safeguards
+- Attendance overview with date/status filters
+- Leave approval queue
+- Payroll — auto-generate monthly records from salary, edit allowances/deductions, mark paid
+- Holiday calendar management
+- Notification feed
 
-- Role-based access for Admin/HR, Manager, and Employee
-- Employee management (CRUD), profiles, and departments
-- Attendance tracking and leave management with approval workflow
-- Payroll/salary overview, company holidays, notifications
-- JWT authentication with protected, role-restricted routes
+**Manager**
+- Team attendance and leave views, scoped to direct reports only
+- Leave approval for direct reports (enforced server-side — a manager cannot act on another manager's team)
+- "My Team" directory
 
-## User Roles
+**Employee**
+- Self-service check-in / check-out with live status
+- Apply for leave, track approval status
+- View own attendance history and payslips
+- Company holiday calendar (read-only)
+- Notifications on leave approval/rejection
 
-| Role | Access |
-|---|---|
-| Admin / HR | Full access — employees, departments, attendance, leave, payroll, holidays, settings |
-| Manager | Team-scoped — team attendance, team leave approvals, department view |
-| Employee | Self-service — own profile, attendance, leave, salary, holidays |
+**Cross-cutting**
+- JWT authentication with bcrypt password hashing
+- Forced password change on first login (temporary passwords)
+- Role-based route protection on both frontend and backend
+- Real-time notification bell (unread count, mark read/mark all read)
 
 ## Tech Stack
 
-- **Frontend:** React, Vite, Tailwind CSS, React Router
+- **Frontend:** React (Vite), Tailwind CSS v4, React Router
 - **Backend:** Node.js, Express.js
-- **Database:** MongoDB (Mongoose)
-- **Auth:** JWT + bcrypt password hashing
+- **Database:** MongoDB with Mongoose
+- **Auth:** JWT, bcrypt
 
 ## Project Structure
-
-```
 SmartHR/
-├── client/          # React + Vite frontend
-│   └── src/
-│       ├── components/   # Reusable UI (Button, Input, LoadingSpinner, EmptyState, ...)
-│       ├── layouts/       # Shared page shells (AuthLayout, ...)
-│       ├── pages/         # Route-level pages, grouped by area (auth, ...)
-│       ├── routes/        # Route definitions
-│       ├── services/      # API client modules
-│       └── utils/         # Validators and other shared helpers
-└── server/          # Express + MongoDB backend
-    ├── controllers/
-    ├── models/
-    ├── routes/
-    ├── middleware/
-    └── config/
-```
+├── client/
+│ ├── src/
+│ │ ├── components/ # Reusable UI (Button, Input, Modal, Sidebar, Navbar, ...)
+│ │ ├── context/ # AuthContext
+│ │ ├── layouts/ # DashboardLayout
+│ │ ├── pages/ # Route-level pages, organized by role
+│ │ ├── routes/ # AppRoutes
+│ │ ├── services/ # API client + one service module per feature
+│ │ └── utils/ # Validators
+│ └── package.json
+│
+├── server/
+│ ├── config/ # DB connection
+│ ├── controllers/ # Route handlers, one per feature
+│ ├── middleware/ # auth (protect/authorize), error handling
+│ ├── models/ # Mongoose schemas
+│ ├── routes/ # Express routers
+│ ├── scripts/ # createAdmin.js (bootstrap script)
+│ ├── utils/ # asyncHandler, jwt helpers
+│ └── server.js
+│
+└── README.md
 
 ## Getting Started
 
-### Frontend
+### Prerequisites
+- Node.js 18+
+- A MongoDB database (local or [MongoDB Atlas](https://www.mongodb.com/atlas))
 
+### 1. Clone and install
 ```bash
-cd client
-npm install
-npm run dev
+git clone https://github.com/krish030705/SmartHR.git
+cd SmartHR
+
+cd server && npm install
+cd ../client && npm install
 ```
 
-Runs at `http://localhost:5173`.
+### 2. Environment variables
 
-### Backend
+PORT=5000
+MONGODB_URI=mongodb+srv://krishhari030705:Hari%40003@cluster0.3hfoiri.mongodb.net/smarthr?appName=Cluster0
+JWT_SECRET=replace_with_a_long_random_string65845
+JWT_EXPIRES_IN=7d
+CLIENT_URL=http://localhost:5173
+VITE_API_URL=http://localhost:5000/api
+
+
+### 3. Bootstrap the first Admin account
+
+There's no public "sign up" — every account is created by an Admin from inside the app. That means the very first Admin has to be created directly, via a one-time script:
 
 ```bash
 cd server
-cp .env.example .env   # then fill in MONGODB_URI and JWT_SECRET
-npm install
+node scripts/createAdmin.js "Your Name" you@example.com yourpassword
+```
+
+### 4. Run the app
+
+In one terminal:
+```bash
+cd server
 npm run dev
 ```
 
-Runs at `http://localhost:5000`. Health check: `GET /api/health`.
+In another terminal:
+```bash
+cd client
+npm run dev
+```
 
-## Roadmap
+Visit `http://localhost:5173`, sign in as Admin/HR with the account you just created, and start adding employees and managers from the Employees page — each gets a temporary password shown once, which they'll be prompted to change on first login.
 
-- [x] Project scaffolding, shared layout, three role-based login pages
-- [ ] Authentication (JWT, password hashing, protected routes)
-- [ ] Role-based routing and guards
-- [ ] Admin dashboard
-- [ ] Employee management + profile
-- [ ] Departments
-- [ ] Attendance
-- [ ] Leave management
-- [ ] Manager dashboard
-- [ ] Employee dashboard
-- [ ] Payroll
-- [ ] Holidays
-- [ ] Notifications
-- [ ] Settings
-- [ ] Seed data, validation polish, error handling pass
-- [ ] Responsive/testing pass
-- [ ] GitHub push
+## API Overview
+
+All endpoints are prefixed with `/api` and require a `Bearer` token (except `/auth/login`) via the `Authorization` header.
+
+| Resource | Base path | Notes |
+|---|---|---|
+| Auth | `/auth` | login, me, register (admin-only), change-password |
+| Employees | `/employees` | Admin-only CRUD, plus `/employees/managers` |
+| Team | `/team` | Manager-only, own direct reports |
+| Departments | `/departments` | Admin-only CRUD |
+| Attendance | `/attendance` | Self check-in/out, admin/manager scoped views |
+| Leave | `/leave` | Apply, view, approve/reject (admin + manager, team-scoped) |
+| Payroll | `/payroll` | Generate, list, edit (admin), own payslips (employee) |
+| Holidays | `/holidays` | View (all roles), write (admin-only) |
+| Notifications | `/notifications` | Own notifications, mark read |
+
+## Future Improvements
+
+- File uploads for employee profile photos
+- Email notifications alongside in-app ones
+- Payroll PDF payslip export
+- Audit log of admin actions
+- Automated test suite (Jest/Supertest for the API, React Testing Library for the client)
