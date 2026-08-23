@@ -1,6 +1,8 @@
 # SmartHR – Human Resource Management System
 
 A full-stack HR management platform with role-based access for Admin/HR, Managers, and Employees — built as a portfolio project to demonstrate a complete MERN application with real authentication, authorization, and multi-role workflows.
+<img width="1911" height="912" alt="login page" src="https://github.com/user-attachments/assets/d01a0c97-a612-4cd4-a292-b2e525015238" />
+
 
 ## Features
 
@@ -14,11 +16,14 @@ A full-stack HR management platform with role-based access for Admin/HR, Manager
 - Payroll — auto-generate monthly records from salary, edit allowances/deductions, mark paid
 - Holiday calendar management
 - Notification feed
+  <img width="1917" height="897" alt="admin dashboard" src="https://github.com/user-attachments/assets/d81d393a-4659-436f-8473-ab1a828d30a9" />
+
 
 **Manager**
 - Team attendance and leave views, scoped to direct reports only
 - Leave approval for direct reports (enforced server-side — a manager cannot act on another manager's team)
 - "My Team" directory
+<img width="1895" height="900" alt="manager dashboard" src="https://github.com/user-attachments/assets/f7bd23b5-e5d6-4a47-bf6d-6b8515ed67ce" />
 
 **Employee**
 - Self-service check-in / check-out with live status
@@ -26,6 +31,8 @@ A full-stack HR management platform with role-based access for Admin/HR, Manager
 - View own attendance history and payslips
 - Company holiday calendar (read-only)
 - Notifications on leave approval/rejection
+  <img width="1918" height="910" alt="employe dashboard" src="https://github.com/user-attachments/assets/70996c81-134e-4b83-a336-71cd41d72dab" />
+
 
 **Cross-cutting**
 - JWT authentication with bcrypt password hashing
