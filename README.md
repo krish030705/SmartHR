@@ -145,3 +145,5 @@ All endpoints are prefixed with `/api` and require a `Bearer` token (except `/au
 - Payroll PDF payslip export
 - Audit log of admin actions
 - Automated test suite (Jest/Supertest for the API, React Testing Library for the client)
+## live URL
+🔗 https://smart-hr-harikrishnan5.vercel.app
